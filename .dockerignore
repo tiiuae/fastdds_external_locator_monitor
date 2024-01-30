@@ -1,0 +1,13 @@
+
+.circleci/
+.github/
+.git/
+.github/
+fognav_msgs/.git/
+fognav_msgs/.github/
+.vscode/
+.dockerignore
+.gitignore
+**Dockerfile
+**.Dockerfile
+Dockerfile.**
