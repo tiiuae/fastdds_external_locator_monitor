@@ -1,4 +1,4 @@
-FROM ghcr.io/tiiuae/fog-ros-baseimage-builder:v3.1.0
+FROM ghcr.io/tiiuae/fog-ros-baseimage-builder:v3.3.0
 
 # config dependencies install
 ARG DEBIAN_FRONTEND=noninteractive
