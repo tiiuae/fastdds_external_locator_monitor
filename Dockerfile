@@ -15,8 +15,10 @@ COPY fastdds_statistics_backend.repos $UNDERLAY_WS/src/fastdds_monitor_tutorial/
 
 # Import the underlay dependencies that doesn't exist in SDK image
 RUN vcs import ./src/ < $UNDERLAY_WS/src/fastdds_monitor_tutorial/underlay.repos
+COPY locator.patch $UNDERLAY_WS/src/fastdds_statistics_backend/locator.patch
 
 RUN ls -la $UNDERLAY_WS/src && \
+    git -C $UNDERLAY_WS/src/fastdds_statistics_backend apply locator.patch && \
     . /usr/bin/ros_setup.bash && \
     colcon build --cmake-args -DBUILD_TESTING=0
 

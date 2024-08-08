@@ -1,0 +1,44 @@
+diff --git a/src/cpp/StatisticsBackend.cpp b/src/cpp/StatisticsBackend.cpp
+index d0a041b..f3eef37 100644
+--- a/src/cpp/StatisticsBackend.cpp
++++ b/src/cpp/StatisticsBackend.cpp
+@@ -531,7 +531,7 @@ Info StatisticsBackend::get_info(
+             info[QOS_INFO_TAG] = participant->qos;
+ 
+             // Locators associated to endpoints
+-            std::set<std::string> locator_set;
++            std::map<std::string, std::set<std::string>> locator_map;
+ 
+             // Writers registered in the participant
+             for (const auto& writer : participant->data_writers)
+@@ -539,7 +539,7 @@ Info StatisticsBackend::get_info(
+                 // Locators associated to each writer
+                 for (const auto& locator : writer.second.get()->locators)
+                 {
+-                    locator_set.insert(locator.second.get()->name);
++                    locator_map[locator.second.get()->name].insert("W");
+                 }
+             }
+ 
+@@ -549,14 +549,18 @@ Info StatisticsBackend::get_info(
+                 // Locators associated to each reader
+                 for (const auto& locator : reader.second.get()->locators)
+                 {
+-                    locator_set.insert(locator.second.get()->name);
++                    locator_map[locator.second.get()->name].insert("R");
+                 }
+             }
+ 
+             DatabaseDump locators = DatabaseDump::array();
+-            for (const auto& locator : locator_set)
++            for (const auto& locator : locator_map)
+             {
+-                locators.push_back(locator);
++                std::string sources = std::accumulate(std::next(locator.second.begin()), locator.second.end(), *locator.second.begin(),
++                    [](std::string a, std::string b) {
++                        return a + ',' + b;
++                    });
++                locators.push_back(locator.first + " [" + sources + "]");
+             }
+             info[LOCATOR_CONTAINER_TAG] = locators;
+             break;
